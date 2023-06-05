@@ -7,12 +7,13 @@
     <br> <br>
 
     <div>
-        <% if (wish.length > 0) { %> 
-            <% wish.forEach(wish => { %>
-                <h2><%= wish.number %> - <%= wish.wishitem %></h2><br>
+        <% if (quote.length > 0) { %> 
+            <% quote.forEach(quote => { %>
+                <h2><%= quote.quoteitem %></h2><br>
+                <p><%= quote.quoteorigin %></p>
             <% }) %>
         <% } else { %>
-            <h2>Ingen ønsker</h2>
+            <h2>No quotes</h2>
         <% } %>
     </div>
 </body>

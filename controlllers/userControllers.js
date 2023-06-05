@@ -1,34 +1,10 @@
-const express = require("express");
-const dotenv = require("dotenv");
-const mongoose = require("mongoose");
-const userRoutes = require("./routes/userRoutes");
-
-const app = express();
-
-//Variabler i .env filen
-dotenv.config();
-
-//Database tilkobling
-const dbURI = process.env.CONNECTION_STRING;
-
-mongoose.connect(dbURI)
-  .then(() => {
-    app.listen(3000);
-    console.log("Listening 3000")
-  })
-  .catch((err) => {
-    console.log(err);
-  });
-
-app.use(express.static("public"));
-app.use(express.json());
-app.set("view engine", "ejs");
-app.use(express.urlencoded({ extended: true }));
-
-app.use("/", userRoutes);
+const User = require("../models/user");
+const Quote = require("../models/quotes");
+const { generateToken } = require("../middleware/auth");
+const bcrypt = require("bcrypt");
 
 // index
-/* app.get("/", async (req, res) => {
+exports.index = async (req, res) => {
     let info = "";
     const filter = {  };
     //const quote = await Quote.find(filter).sort({ dato: -1 }).limit(5);
@@ -37,36 +13,48 @@ app.use("/", userRoutes);
     let quote = quoteList[random];
     console.log(quote);
     res.render("index.ejs", {user: "", title: "hjem", quote: quote})
-})
+};
 
 // Logg inn
-app.get("/sign-in", (req, res) => {
+exports.login =  (req, res) => {
     res.render("sign-in.ejs", { title: "Sign in", user: "", feedback: "" });
-  });
+  };
 
-app.post("/sign-in", async (req, res) => {
-const { username, password } = req.body;
-const user = await User.findOne({ username: username });
-if (user) {
-    if (user.password == password) {
-        res.redirect("/home:" + username, { title: "User home", user: username, quote: "" }, 200);
-    } else {
-        let feedback = "Feil passord";
+exports.loginUser = async (req, res) => {
+    const { username, password } = req.body;
+
+    try {
+        const user = await User.findOne({ username: username });
+        if (user) {
+            const passwordMatch = await bcrypt.compare(password, user.password);
+            if (passwordMatch) {
+                const payload = { userId: user._id };
+                const token = generateToken(payload);
+                res.cookie("token", token, { httpOnly: true });
+                res.redirect("/home:" + username, { title: "User home", user: username, quote: "" }, 200);
+            } else {
+                let feedback = "Feil passord";
+                res.render("sign-in.ejs", { title: "Sign in", user: "", feedback: feedback });
+            }
+        } else {
+            console.log("Brukeren finnes ikke");
+            let feedback = "Brukeren finnes ikke";
+            res.render("sign-in.ejs", { title: "Sign in", user: "", feedback: feedback });
+        }
+    }
+    catch (err) {
+        console.log(err);
+        let feedback = "Feil oppstått ved innlogging";
         res.render("sign-in.ejs", { title: "Sign in", user: "", feedback: feedback });
     }
-} else {
-    console.log("Brukeren finnes ikke");
-    let feedback = "Brukeren finnes ikke";
-    res.render("sign-in.ejs", { title: "Sign in", user: "", feedback: feedback });
-}
-});
+};
 
 // Lag ny bruker
-app.get("/sign-up", (req, res) => {
+exports.signup = (req, res) => {
     res.render("sign-up.ejs", { title: "Sign up", user: "", feedback: "" });
-});
+};
 
-app.post("/sign-up", async (req, res) => {
+exports.registrerUser = async (req, res) => {
 const { username, password, password2 } = req.body;
 console.log(username, password, password2);
 if (password != password2) {
@@ -74,8 +62,12 @@ if (password != password2) {
     res.render("sign-up.ejs", { title: "Sign up", user: "", feedback: feedback });
 } else {
     try {
-        currUser = username;
-        const user = await User.create({ username, password });
+        const hash = await bcrypt.hash(password, 10);
+        const user = await User.create({ username, password: hash });
+        const payload = { userId: user._id };
+        const token = generateToken(payload);
+        res.cookie("token", token, { httpOnly: true });
+
         res.redirect("/home:" + username, { title: "User home", user: username, quote: "" }, 200);
     }
     catch (err) {
@@ -84,18 +76,19 @@ if (password != password2) {
         res.render("sign-up.ejs", { title: "Sign up", user: "", feedback: feedback });
     }
 }
-});
+};
 
 // Legg til quote
-app.get("/home:user", async (req, res) => {
+exports.home = async (req, res) => {
     let user = req.params.user;
+    user = user.substring(1);
     console.log(user);
     const filter = { user: user };
     const quoteList = await Quote.find(filter);
     res.render("userhome.ejs", { title: "User home", user: user, quote: quoteList });
-});
+};
 
-app.post("/add", async (req, res) => {
+exports.addquote = async (req, res) => {
     const { username, quoteitem, quoteorigin } = req.body;
     console.log(username, quoteitem, quoteorigin);
     const user = username;
@@ -113,22 +106,22 @@ app.post("/add", async (req, res) => {
         const quoteList = await Quote.find(filter);
         res.render("userhome.ejs", { title: "User home", user: username, quote: quoteList });
     }
-});
+};
 
 // Andre lister
-app.get("/:user", async (req, res) => {
+exports.otherquote = async (req, res) => {
     let user = req.params.user;
     user = user.substring(1);
     console.log("HER", user);
     const filter = { user: user };
     const quoteList = await Quote.find(filter);
-    res.render("otherlist.ejs", { title: "Other list", user: user, quote: quoteList });
-});
+    res.render("otherquote.ejs", { title: "Other quote", user: user, quote: quoteList });
+};
 
-app.get("/LoggUt", async (req, res) => {
+exports.logout = async (req, res) => {
     let info = "";
-    const filter = { number: 1 };
-    const quoteList = await Wish.find(filter).sort({ dato: -1 }).limit(5);
+    const filter = { };
+    const quoteList = await Wish.find(filter);
     console.log(quoteList);
-    res.render("index.ejs", {user: "", title: "hjem", wish: quoteList})
-}); */
+    res.render("index.ejs", {user: "", title: "hjem", quote: quoteList})
+};

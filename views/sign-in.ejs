@@ -3,13 +3,12 @@
     <%- include('./partials/head.ejs') %>
 <body>
     <div class="logginn">
-        <h3>"Sign in and wish with us!"</h3>
+        <h3>"Sign in and quote with us!"</h3>
         <form action="/sign-in" method="post">
             <input type="text" name="username" placeholder="username" required> <br> <br>
             <input type="text" name="password" placeholder="password" required> <br> <br>
             <div class="feedback" id="feedback"> <%= feedback %> </div>
             <input type="submit" name="what" value="sign in">
-
         </form>
     </div>
 </body>

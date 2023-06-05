@@ -1,25 +1,22 @@
 const mongoose = require("mongoose");
 
-// Definere wishlist skjema
+// Definere quotes skjema
 const QuotesSchema = new mongoose.Schema({
     user: {
         type: String,
         require: true
     },
-    number: { 
-        type: Number, 
-        require: true
-    },
-    wishitem: {
+    quoteitem: {
         type: String,
         require: true
     },
-    dato: {
-        type: Date,
-        require: true,
-        unique: true,
-        lowercase: true
-    }
+    quoteorigin: {
+        type: String,
+        require: true
+    },
+    /* { 
+        timestamps: true 
+    } */
 });
 
 const Quotes = mongoose.model("quote", QuotesSchema);
