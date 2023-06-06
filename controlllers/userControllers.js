@@ -31,7 +31,7 @@ exports.loginUser = async (req, res) => {
                 const payload = { userId: user._id };
                 const token = generateToken(payload);
                 res.cookie("token", token, { httpOnly: true });
-                res.redirect("/home:" + username, { title: "User home", user: username, quote: "" }, 200);
+                res.redirect("/home/" + username, { title: "User home", user: username, quote: "" }, 200);
             } else {
                 let feedback = "Feil passord";
                 res.render("sign-in.ejs", { title: "Sign in", user: "", feedback: feedback });
@@ -68,7 +68,7 @@ if (password != password2) {
         const token = generateToken(payload);
         res.cookie("token", token, { httpOnly: true });
 
-        res.redirect("/home:" + username, { title: "User home", user: username, quote: "" }, 200);
+        res.redirect("/home/" + username, { title: "User home", user: username, quote: "" }, 200);
     }
     catch (err) {
         console.log(err.message);
@@ -81,7 +81,6 @@ if (password != password2) {
 // Legg til quote
 exports.home = async (req, res) => {
     let user = req.params.user;
-    user = user.substring(1);
     console.log(user);
     const filter = { user: user };
     const quoteList = await Quote.find(filter);
@@ -111,7 +110,6 @@ exports.addquote = async (req, res) => {
 // Andre lister
 exports.otherquote = async (req, res) => {
     let user = req.params.user;
-    user = user.substring(1);
     console.log("HER", user);
     const filter = { user: user };
     const quoteList = await Quote.find(filter);
@@ -121,7 +119,7 @@ exports.otherquote = async (req, res) => {
 exports.logout = async (req, res) => {
     let info = "";
     const filter = { };
-    const quoteList = await Wish.find(filter);
+    const quoteList = await Quote.find(filter);
     console.log(quoteList);
     res.render("index.ejs", {user: "", title: "hjem", quote: quoteList})
 };
