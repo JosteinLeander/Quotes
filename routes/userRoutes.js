@@ -8,9 +8,9 @@ router.get("/sign-in", userControllers.login);
 router.post("/sign-in", userControllers.loginUser);
 router.get("/sign-up", userControllers.signup);
 router.post("/sign-up", userControllers.registrerUser);
-router.get("/home/user", userControllers.home);
+router.get("/home/:user", userControllers.homeUser);
 router.post("/add", userControllers.addquote);
-router.get("/user", userControllers.otherquote);
 router.get("/LoggUt", userControllers.logout);
+router.get("/:user", userControllers.otherquote);
 
 module.exports = router;

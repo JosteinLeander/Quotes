@@ -6,18 +6,19 @@
 
     <br> <br>
 
-    <form action="/add" method="post">
+    <form action="/add" method="post" class="adding">
         <input type="hidden" name="username" value= <%= user %> />
-        <input class="addnew" type="text" name="quoteitem" placeholder='"input field for new quotes here __________________________________________________________________"' required>
-        <input type="text" name="quoteorigin" placeholder="Input field for origin here">
-        <input class="addbtn" type="submit" name="addbtn" value="Publish"> <br> <br>
+        <input class="addnew" type="text" name="quoteitem" placeholder='"input field for new quotes here __________________________________________________________________"' required>  <br>
+        <input style="font-size: 19px; float: right; border: none;" type="text" name="quoteorigin" placeholder="Input field for origin here"> <br>
+        <div style="text-align: center;"><input class="addbtn" type="submit" name="addbtn" value="Publish"></div> <br> <br>
     </form> <br>
 
     <div>
         <% if (quote.length > 0) { %> 
             <% quote.forEach(quote => { %>
-                <h2><%= quote.quoteitem %></h2><br>
-                <p><%= quote.quoteorigin %></p>
+                <div class="container">
+                    <b><h2 class="h1mod"><%= quote.quoteitem %></h2><p class="origin"><%= quote.quoteorigin %></p>
+                </div> <br>
             <% }) %>
         <% } else { %>
             <h2>No quotes</h2>

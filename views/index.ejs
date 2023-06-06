@@ -4,9 +4,8 @@
 <body>
     <%- include('./partials/nav.ejs') %>
 
-    <div>
-        <b><h1><%= quote.quoteitem %></h1></b><br>
-        <p style="float: right;"><%= quote.quoteorigin %></p>
+    <div class="contain">
+        <b><h1><%= quote.quoteitem %></h1><p class="origin"><%= quote.quoteorigin %></p>
     </div>
 </body>
 </html>

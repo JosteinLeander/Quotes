@@ -9,8 +9,9 @@
     <div>
         <% if (quote.length > 0) { %> 
             <% quote.forEach(quote => { %>
-                <h2><%= quote.quoteitem %></h2><br>
-                <p><%= quote.quoteorigin %></p>
+                <div class="container">
+                    <b><h2 class="h1mod"><%= quote.quoteitem %></h2><p class="origin"><%= quote.quoteorigin %></p>
+                </div> <br>
             <% }) %>
         <% } else { %>
             <h2>No quotes</h2>

@@ -1,18 +1,18 @@
 <ul id="menu">
-    <li><p class="logo">Logo</p></li> <br>
+    <li><p>Logo</p></li> <br>
     
       <!-- Logg inn eller Logg ut -->
       <% if (user != 'undefined') { %>
         <% if (user != '') { %>
-            <li style="margin-left: 35%;"><p>Quotes - <%= user %></li>
-            <li style="float: right;"><p><a href="/LoggUt">log out</a></p></li>
+            <li style="margin-left: 42%;">Quotes - <%= user %></li>
+            <li style="float: right;"><a href="/LoggUt">Log out</a></li>
         <% } else { %>
-            <li style="margin-left: 35%;"><p>Quotes</p></li>
-            <li style="float: right;"> <a href="/sign-in">Logg inn</a></li>
+            <li style="margin-left: 45%;">Quotes</li>
+            <li style="float: right;"> <a href="/sign-in">Log in</a></li>
         <% } %>
       <% } else { %>
-          <li style="margin-left: 35%;">Quotes</li>
-          <li style="float: right;"><a href="/sign-in">Logg inn</a></li>
+          <li style="margin-left: 45%;">Quotes</li>
+          <li style="float: right;"><a href="/sign-in">Log in</a></li>
       <% } %>
   </ul>  
   <hr>

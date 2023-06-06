@@ -1,11 +1,10 @@
 const User = require("../models/user");
 const Quote = require("../models/quotes");
-const { generateToken } = require("../middleware/auth");
+const { generateToken, verifyUser } = require("../middleware/auth");
 const bcrypt = require("bcrypt");
 
 // index
 exports.index = async (req, res) => {
-    let info = "";
     const filter = {  };
     //const quote = await Quote.find(filter).sort({ dato: -1 }).limit(5);
     const quoteList = await Quote.find(filter);
@@ -33,18 +32,18 @@ exports.loginUser = async (req, res) => {
                 res.cookie("token", token, { httpOnly: true });
                 res.redirect("/home/" + username, { title: "User home", user: username, quote: "" }, 200);
             } else {
-                let feedback = "Feil passord";
+                let feedback = "Wrong password";
                 res.render("sign-in.ejs", { title: "Sign in", user: "", feedback: feedback });
             }
         } else {
             console.log("Brukeren finnes ikke");
-            let feedback = "Brukeren finnes ikke";
+            let feedback = "User does not exist";
             res.render("sign-in.ejs", { title: "Sign in", user: "", feedback: feedback });
         }
     }
     catch (err) {
         console.log(err);
-        let feedback = "Feil oppstått ved innlogging";
+        let feedback = "Error occured while signing in";
         res.render("sign-in.ejs", { title: "Sign in", user: "", feedback: feedback });
     }
 };
@@ -58,7 +57,7 @@ exports.registrerUser = async (req, res) => {
 const { username, password, password2 } = req.body;
 console.log(username, password, password2);
 if (password != password2) {
-    let feedback = "Passordene stemmer ikke";
+    let feedback = "Passwords does not match";
     res.render("sign-up.ejs", { title: "Sign up", user: "", feedback: feedback });
 } else {
     try {
@@ -72,19 +71,32 @@ if (password != password2) {
     }
     catch (err) {
         console.log(err.message);
-        let feedback = "Brukeren finnes fra før";
+        let feedback = "User already exists";
         res.render("sign-up.ejs", { title: "Sign up", user: "", feedback: feedback });
     }
 }
 };
 
 // Legg til quote
-exports.home = async (req, res) => {
-    let user = req.params.user;
-    console.log(user);
-    const filter = { user: user };
-    const quoteList = await Quote.find(filter);
-    res.render("userhome.ejs", { title: "User home", user: user, quote: quoteList });
+exports.homeUser = async (req, res) => {
+    //Kaller en funksjon for å sjekke om brukeren som prøver å komme inn på siden har lov (true/false)
+    let allowToSee = await verifyUser(req);
+
+    if (!allowToSee) {
+        console.log("Bruker har ikke tilgang");
+        const filter = {  };
+        const quoteList = await Quote.find(filter);
+        const random = Math.floor(Math.random() * quoteList.length);
+        let quote = quoteList[random];
+        console.log(quote);
+        res.redirect("/", {user: "", title: "hjem", quote: quote}, 200);
+    } else {
+        let user = req.params.user;
+        console.log(user);
+        const filter = { user: user };
+        const quoteList = await Quote.find(filter);
+        res.render("userhome.ejs", { title: "User home", user: user, quote: quoteList });
+    }
 };
 
 exports.addquote = async (req, res) => {
@@ -92,8 +104,7 @@ exports.addquote = async (req, res) => {
     console.log(username, quoteitem, quoteorigin);
     const user = username;
     try {
-        const dato = new Date();
-        const wish = await Quote.create({ user, quoteitem, quoteorigin });
+        const quote = await Quote.create({ user, quoteitem, quoteorigin });
         const filter = { user: user };
         const quoteList = await Quote.find(filter);
         console.log(quoteList);
@@ -117,9 +128,12 @@ exports.otherquote = async (req, res) => {
 };
 
 exports.logout = async (req, res) => {
-    let info = "";
+    //Setter token til tom slik at brukeren er logget ut
+    res.cookie('token', "", { httpOnly: true });
     const filter = { };
     const quoteList = await Quote.find(filter);
-    console.log(quoteList);
-    res.render("index.ejs", {user: "", title: "hjem", quote: quoteList})
+    const random = Math.floor(Math.random() * quoteList.length);
+    let quote = quoteList[random];
+    console.log(quote);
+    res.redirect("/", {user: "", title: "hjem", quote: quote}, 200);
 };

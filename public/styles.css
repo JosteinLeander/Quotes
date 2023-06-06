@@ -24,13 +24,13 @@ li a:hover:not(.active) {
     background-color: grey;
 }
 
-.logo {
-    
+h1 {
+    font-size: 75px;
+    font-family: cursive;
 }
 
-h1 {
-    text-align: center;
-    font-family: cursive;
+.h1mod {
+    font-size: 45px;
 }
 
 h2 {
@@ -39,6 +39,11 @@ h2 {
 
 h3 {
     text-align: center;
+}
+
+.origin {
+    font-size: 30px;
+    color: rgb(87, 87, 87);
 }
 
 .logginn {
@@ -57,15 +62,43 @@ h3 {
 }
 
 .addnew {
-    margin-left: 35%;
-    width: 300px;
+    width: 600px;
     height: 50px;
     text-align: center;
     font-size: 20px;
+    outline: none;
+    border: none;
 }
 
 .addbtn {
     height: 55px;
     width: auto;
     font-size: 20px;
+    font-family: cursive;
+    font-weight: bolder;
+}
+
+.contain {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    position: fixed;
+    align-items: center;
+    justify-content: center;
+    text-align-last: right;
+}
+
+.container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align-last: right;
+}
+
+.adding {
+    border: black solid 1px;
+    margin-left: 20%;
+    margin-right: 20%;
 }

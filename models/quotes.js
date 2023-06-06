@@ -13,10 +13,7 @@ const QuotesSchema = new mongoose.Schema({
     quoteorigin: {
         type: String,
         require: true
-    },
-    /* { 
-        timestamps: true 
-    } */
+    }
 });
 
 const Quotes = mongoose.model("quote", QuotesSchema);
