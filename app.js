@@ -14,7 +14,7 @@ const dbURI = process.env.CONNECTION_STRING;
 mongoose.connect(dbURI)
   .then(() => {
     app.listen(80);
-    console.log("Listening 3000")
+    console.log("Listening 80")
   })
   .catch((err) => {
     console.log(err);
