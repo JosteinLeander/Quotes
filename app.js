@@ -5,13 +5,15 @@ const userRoutes = require("./routes/userRoutes");
 
 const app = express();
 
+mongoose.set("strictQuery", false);
+
 //Variabler i .env filen
 dotenv.config();
 
 //Database tilkobling
 const dbURI = process.env.CONNECTION_STRING;
 
-mongoose.connect(dbURI)
+mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     app.listen(80);
     console.log("Listening 80")
