@@ -24,6 +24,10 @@ li a:hover:not(.active) {
     background-color: grey;
 }
 
+.logo {
+    
+}
+
 h1 {
     text-align: center;
     font-family: cursive;
