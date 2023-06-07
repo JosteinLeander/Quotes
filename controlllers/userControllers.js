@@ -118,6 +118,23 @@ exports.addquote = async (req, res) => {
     }
 };
 
+exports.editquote = async (req, res) => {
+    const { username, quoteitem, quoteorigin } = req.body;
+    const user = username;
+    try {
+        const quote = await Quote.updateOne({ user, quoteitem, quoteorigin });
+        const filter = { user: user };
+        const quoteList = await Quote.find(filter);
+        res.render("userhome.ejs", { title: "User home", user: username, quote: quoteList });
+    }
+    catch (err) {
+        console.log(err.message);
+        const filter = { user: user };
+        const quoteList = await Quote.find(filter);
+        res.render("userhome.ejs", { title: "User home", user: username, quote: quoteList });
+    };
+};
+
 // Andre lister
 exports.otherquote = async (req, res) => {
     let user = req.params.user;
@@ -136,4 +153,11 @@ exports.logout = async (req, res) => {
     let quote = quoteList[random];
     console.log(quote);
     res.redirect("/", {user: "", title: "hjem", quote: quote}, 200);
+};
+
+// user manual
+exports.usermanual = async (req, res) => {
+
+    
+    res.render("index.ejs", { user: "", title: "hjem" })
 };
