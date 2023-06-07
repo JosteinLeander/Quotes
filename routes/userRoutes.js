@@ -10,7 +10,9 @@ router.get("/sign-up", userControllers.signup);
 router.post("/sign-up", userControllers.registrerUser);
 router.get("/home/:user", userControllers.homeUser);
 router.post("/add", userControllers.addquote);
+router.post("/edit/:user", userControllers.editquote);
 router.get("/LoggUt", userControllers.logout);
 router.get("/:user", userControllers.otherquote);
+router.get("/usermanual", userControllers.usermanual);
 
 module.exports = router;

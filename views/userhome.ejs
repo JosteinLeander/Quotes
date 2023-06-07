@@ -18,6 +18,7 @@
             <% quote.forEach(quote => { %>
                 <div class="container">
                     <b><h2 class="h1mod"><%= quote.quoteitem %></h2><p class="origin"><%= quote.quoteorigin %></p>
+                    <button action="editquote">Edit quote</button>
                 </div> <br>
             <% }) %>
         <% } else { %>
